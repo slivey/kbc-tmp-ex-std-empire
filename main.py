@@ -11,13 +11,22 @@ from ftplib import FTP
 import csv
 import zipfile
 import gzip
+import io
 import os
 import sys
 import requests
 import logging
+import re
+
+import pip
+pip.main(['install', '--disable-pip-version-check',
+          '--no-cache-dir', 'dateparser'])
+pip.main(['install', '--disable-pip-version-check', '--no-cache-dir', 'pygelf'])
+pip.main(['install', '--disable-pip-version-check', '--no-cache-dir', 'boto'])
+pip.main(['install', '--disable-pip-version-check', '--no-cache-dir', 'boto3'])
+
 from keboola import docker
 from pygelf import GelfTcpHandler
-import re
 import pandas as pd
 import boto3
 import botocore
