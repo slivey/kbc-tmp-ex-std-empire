@@ -1,0 +1,14 @@
+{
+    "ftp_host": "ftp.abc.com",
+    "ftp_user": "abc@gabc.com",
+    "#ftp_password": "xx",
+    "ftp_dir": ".",
+    "zip_pattern": "*.zip",
+    "zip_regex": "^(.*)_TO_ABC_(\\d{14}).*\\.zip$",
+    "file_regex": "^(.*)\\.(txt|TXT)$",
+    "s3_client": "AKIAJKJOA7SYV6UMWENQ",
+    "#s3_secret": "xx",
+    "s3_bucket": "abc-archive",
+    "s3_folder": "tmp/RAW/abc__prod",
+    "header_to_be_insert": []
+}
