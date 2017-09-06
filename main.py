@@ -100,8 +100,8 @@ if __name__ == "__main__":
 
         # Download zip file locally
         logging.info("Downloading ftp zip file: " + z)
-        ftp.retrbinary("RETR " + z, open("data/in/files/" + z, 'wb').write)
-        zf = zipfile.ZipFile("data/in/files/" + z)
+        ftp.retrbinary("RETR " + z, open("/data/in/files/" + z, 'wb').write)
+        zf = zipfile.ZipFile("/data/in/files/" + z)
 
         for f in zf.namelist():  # Get list of text files in zip file
             ftype = str(re.search(file_regex, f).group(1)).replace(
@@ -118,7 +118,7 @@ if __name__ == "__main__":
                              encoding='ISO-8859-1')
 
             logging.info("Writing out gzip csv file: " + gz_file)
-            content = df.to_csv(path_or_buf="data/out/files/" + gz_file,  # write out gzip csv
+            content = df.to_csv(path_or_buf="/data/out/files/" + gz_file,  # write out gzip csv
                                 sep=',',
                                 header=True,
                                 index=False,
@@ -150,12 +150,12 @@ if __name__ == "__main__":
                 try:
                     # upload the gz file to s3
                     logging.info("Uploading file to s3: " + gz_file)
-                    s3.upload_file("data/out/files/" + gz_file,
+                    s3.upload_file("/data/out/files/" + gz_file,
                                    s3_bucket, s3_file_path)
                 except:
                     logging.info("Error uploading file to s3: " + gz_file)
             try:
-                os.remove("data/out/files/" + gz_file)
+                os.remove("/data/out/files/" + gz_file)
                 logging.info("Local file removed: " + z)
             except:
                 logging.info("Error removing local file: " + gz_file)
@@ -184,7 +184,7 @@ if __name__ == "__main__":
         else:
             try:
                 logging.info("Uploading file to s3: " + z)
-                s3.upload_file("data/in/files/" + z, s3_bucket,
+                s3.upload_file("/data/in/files/" + z, s3_bucket,
                                s3_file_path)  # upload zip file to s3
 
                 logging.info("Deleting remote ftp file: " + z)
@@ -192,7 +192,7 @@ if __name__ == "__main__":
             except:
                 logging.info("Error uploading file to s3: " + z)
         try:
-            os.remove("data/in/files/" + z)
+            os.remove("/data/in/files/" + z)
             logging.info("Local file removed: " + z)
         except:
             logging.info("Error removing local file: " + z)
