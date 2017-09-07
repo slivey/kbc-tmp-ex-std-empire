@@ -24,6 +24,7 @@ pip.main(['install', '--disable-pip-version-check',
 pip.main(['install', '--disable-pip-version-check', '--no-cache-dir', 'pygelf'])
 pip.main(['install', '--disable-pip-version-check', '--no-cache-dir', 'boto'])
 pip.main(['install', '--disable-pip-version-check', '--no-cache-dir', 'boto3'])
+pip.main(['install', '--disable-pip-version-check', '--no-cache-dir', 'botocore'])
 
 from keboola import docker
 from pygelf import GelfTcpHandler
