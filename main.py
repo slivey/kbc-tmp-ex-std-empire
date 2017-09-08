@@ -56,12 +56,7 @@ logger.removeHandler(logger.handlers[0])
 
 # initialize application
 logging.info("Initializing Docker. CWD: " + os.getcwd())
-
-# server docker
-cfg = docker.Config('/data/')
-
-# windows dev docker
-# cfg = docker.Config(os.path.relpath('data'))
+cfg = docker.Config(os.path.relpath('/data'))
 
 # Access the supplied parameters
 logging.info("Getting config params.")
@@ -110,8 +105,8 @@ if __name__ == "__main__":
         # Download zip file locally
         logging.info("Downloading ftp zip file: " + z)
         ftp.retrbinary(
-            "RETR " + z, open(os.path.join("data/out/files", z), 'wb').write)
-        zf = zipfile.ZipFile(os.path.join("data/out/files", z))
+            "RETR " + z, open(os.path.join("d/ata/out/files", z), 'wb').write)
+        zf = zipfile.ZipFile(os.path.join("/data/out/files", z))
 
         for f in zf.namelist():  # Get list of text files in zip file
             ftype = str(re.search(file_regex, f).group(1)).replace(
@@ -128,7 +123,7 @@ if __name__ == "__main__":
                              encoding='ISO-8859-1')
 
             logging.info("Writing out gzip csv file: " + gz_file)
-            content = df.to_csv(path_or_buf=os.path.join("data/out/files", gz_file),  # write out gzip csv
+            content = df.to_csv(path_or_buf=os.path.join("/data/out/files", gz_file),  # write out gzip csv
                                 sep=',',
                                 header=True,
                                 index=False,
@@ -143,25 +138,25 @@ if __name__ == "__main__":
             s3_file_path = s3_folder + '/' + gz_file
 
             logging.info("Opening file for upload: " + gz_file)
-            fgz = open(os.path.join("data/out/files", gz_file), 'rb')
+            fgz = open(os.path.join("/data/out/files", gz_file), 'rb')
 
             logging.info("Uploading file to s3: " + gz_file)
             conn.upload(s3_file_path, fgz, s3_bucket)
 
             logging.info("Removing local file: " + gz_file)
-            os.remove(os.path.join("data/out/files", gz_file))
+            os.remove(os.path.join("/data/out/files", gz_file))
 
         # upload zip to s3
         s3_file_path = s3_folder + '/' + z
 
         logging.info("Opening zip file for upload: " + z)
-        fz = open(os.path.join("data/out/files", z), 'rb')
+        fz = open(os.path.join("/data/out/files", z), 'rb')
 
         logging.info("Uploading zip file to s3: " + z)
         conn.upload(s3_file_path, fz, s3_bucket)
 
         logging.info("Removing local zip file: " + z)
-        os.remove(os.path.join("data/out/files", z))
+        os.remove(os.path.join("/data/out/files", z))
 
         logging.info("Deleting remote ftp file: " + z)
         ftp.delete(z)  # remove the zip file from ftp
