@@ -58,7 +58,10 @@ logger.removeHandler(logger.handlers[0])
 logging.info("Initializing Docker. CWD: " + os.getcwd())
 
 # server docker
-cfg = docker.Config(os.path.relpath('data'))
+cfg = docker.Config('/data/')
+
+# windows dev docker
+# cfg = docker.Config(os.path.relpath('data'))
 
 # Access the supplied parameters
 logging.info("Getting config params.")
