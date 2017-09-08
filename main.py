@@ -110,8 +110,8 @@ if __name__ == "__main__":
         # Download zip file locally
         logging.info("Downloading ftp zip file: " + z)
         ftp.retrbinary(
-            "RETR " + z, open(os.path.join("data/in/files", z), 'wb').write)
-        zf = zipfile.ZipFile(os.path.join("data/in/files", z))
+            "RETR " + z, open(os.path.join("data/out/files", z), 'wb').write)
+        zf = zipfile.ZipFile(os.path.join("data/out/files", z))
 
         for f in zf.namelist():  # Get list of text files in zip file
             ftype = str(re.search(file_regex, f).group(1)).replace(
@@ -155,13 +155,13 @@ if __name__ == "__main__":
         s3_file_path = s3_folder + '/' + z
 
         logging.info("Opening zip file for upload: " + z)
-        fz = open(os.path.join("data/in/files", z), 'rb')
+        fz = open(os.path.join("data/out/files", z), 'rb')
 
         logging.info("Uploading zip file to s3: " + z)
         conn.upload(s3_file_path, fz, s3_bucket)
 
         logging.info("Removing local zip file: " + z)
-        os.remove(os.path.join("data/in/files", z))
+        os.remove(os.path.join("data/out/files", z))
 
         logging.info("Deleting remote ftp file: " + z)
         ftp.delete(z)  # remove the zip file from ftp
