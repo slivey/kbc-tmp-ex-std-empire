@@ -1,2 +1,10 @@
 data
 .vscode
+pyvenv.cfg
+Include
+Lib
+man
+Scripts
+share
+pip-selfcheck.json
+Dockerfile
