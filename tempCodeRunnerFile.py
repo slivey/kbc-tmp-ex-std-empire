@@ -1,1 +1,0 @@
-cfg = docker.Config('/data/')
