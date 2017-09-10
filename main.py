@@ -7,6 +7,7 @@ from __future__ import print_function
 Python 3 environment (unicode script fixes in place)
 """
 
+import ftplib
 from ftplib import FTP
 import csv
 import zipfile
@@ -84,22 +85,34 @@ if __name__ == "__main__":
     """
 
     # ftp connect
-    logging.info("Connecting to ftp: " + ftp_host)
-    ftp = FTP(ftp_host)
-    ftp.login(ftp_user, ftp_password)
-    ftp.set_pasv(True)
-    ftp.cwd(ftp_dir)
+    try:
+        logging.info("Connecting to ftp: " + ftp_host)
+        ftp = FTP(ftp_host)
+        ftp.login(ftp_user, ftp_password)
+        ftp.set_pasv(True)
+        ftp.cwd(ftp_dir)
+        logging.info("Successfully connected to ftp: " + ftp_host)
+    except Exception as a:
+        logging.error("Could not connect to ftp. Exit!")
+        sys.exit(1)
 
     # s3 client init
     try:
         conn = tinys3.Connection(s3_client, s3_secret, tls=True)
-        logging.info("Successfully connected." + str(conn))
+        logging.info("Successfully connected to s3." + str(conn))
     except Exception as a:
-        logging.error("Could not connect. Exit!")
+        logging.error("Could not connect to s3. Exit!")
         sys.exit(1)
 
     logging.info("Getting list of remote ftp zip files: " + zip_pattern)
-    for z in ftp.nlst(zip_pattern):  # Get list of zip files on remote FTP
+    zfiles = []
+    try:
+        zfiles = ftp.nlst(zip_pattern)
+    except ftplib.all_errors as e:
+        logging.info("FTP response: " + str(e))
+        sys.exit(1)
+
+    for z in zfiles:  # Get list of zip files on remote FTP
         zname = z
         zsize = ftp.size(z)
         zmodified = datetime.strptime(ftp.sendcmd(
@@ -170,4 +183,4 @@ if __name__ == "__main__":
         logging.info("Removing local zip file: " + z)
         os.remove(file_dir + z)
 
-        logging.info("Script completed.")
+    logging.info("Script completed.")
