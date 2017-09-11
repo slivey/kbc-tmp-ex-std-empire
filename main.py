@@ -32,7 +32,7 @@ import pandas as pd
 import tinys3
 from datetime import datetime
 
-debug = True
+debug = False
 data_dir = '/data/'
 if (debug == True):
     data_dir = 'data/'
