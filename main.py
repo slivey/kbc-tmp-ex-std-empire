@@ -32,7 +32,7 @@ import pandas as pd
 import tinys3
 from datetime import datetime
 
-debug = False
+debug = True
 data_dir = '/data/'
 if (debug == True):
     data_dir = 'data/'
@@ -40,20 +40,9 @@ file_dir = data_dir + "out/files/"
 
 # Logging
 logging.basicConfig(
+    format="%(asctime)s: [%(levelname)s] - %(message)s",
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
-logger = logging.getLogger()
-fields = {"_some": {"structured": "data"}}
-logger.addHandler(GelfTcpHandler(
-    host=os.getenv('KBC_LOGGER_ADDR'),
-    port=os.getenv('KBC_LOGGER_PORT'),
-    version="1.0",
-    debug=False, **fields
-))
-# removes the initial stdout logging
-logger.removeHandler(logger.handlers[0])
+    datefmt='%Y-%m-%d %H:%M:%S')
 
 # Environment setup
 abspath = os.path.abspath(__file__)
@@ -165,6 +154,8 @@ if __name__ == "__main__":
             logging.info("Removing local file: " + gz_file)
             os.remove(file_dir + gz_file)
 
+        zf.close()
+
         # upload zip to s3
         s3_file_path = s3_folder + '/' + z
 
@@ -173,14 +164,15 @@ if __name__ == "__main__":
 
         logging.info("Uploading zip file to s3: " + z)
         conn.upload(s3_file_path, fz, s3_bucket)
+        fz.close()
 
         logging.info("Deleting remote ftp file: " + z)
         ftp.delete(z)  # remove the zip file from ftp
 
-        logging.info("Closing ftp.")
-        ftp.close()
-
         logging.info("Removing local zip file: " + z)
         os.remove(file_dir + z)
+
+    logging.info("Closing ftp.")
+    ftp.close()
 
     logging.info("Script completed.")
